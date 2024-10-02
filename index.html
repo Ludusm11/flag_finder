@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Show Country Flag by IP</title>
+</head>
+<body>
+    <h1>Welcome, visitor!</h1>
+    <p id="country-info">Detecting your location...</p>
+    <img id="country-flag" src="" alt="Country Flag" style="display: none;" width="100"/>
+
+    <script>
+        async function getUserCountry() {
+            try {
+                // Fetch location data from ipstack API
+                const response = await fetch('http://api.ipstack.com/check?access_key=dd3bf0d40fcf6ca2df78ae88def1c4b8');
+                const data = await response.json();
+                const countryCode = data.country_code; // Get the country code (e.g., 'US')
+
+                // Update the page with the country info and flag
+                document.getElementById('country-info').textContent = `You are visiting from ${data.country_name}`;
+                
+                // Display the flag using a CDN like CountryFlags.io
+                const flagUrl = `https://flagcdn.com/160x120/${countryCode.toLowerCase()}.png`;
+                const flagImg = document.getElementById('country-flag');
+                flagImg.src = flagUrl;
+                flagImg.style.display = 'block';
+            } catch (error) {
+                document.getElementById('country-info').textContent = 'Unable to detect location.';
+            }
+        }
+
+        getUserCountry();
+    </script>
+</body>
+</html>
